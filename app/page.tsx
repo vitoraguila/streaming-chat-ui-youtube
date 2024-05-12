@@ -4,7 +4,11 @@ import { useState } from "react";
 import { Textarea } from "../components/ui/TextArea";
 import { Button } from "../components/ui/Button";
 import { cn } from "@/app/lib/utils";
+import { useUIState, useActions } from "ai/rsc";
 import { useEnterSubmit } from "./lib/hooks/use-enter-submit";
+import { nanoid } from "nanoid";
+import { AI } from "./lib/provider";
+import { Separator } from "@radix-ui/react-separator";
 
 function IconArrowElbow({ className, ...props }: React.ComponentProps<"svg">) {
   return (
@@ -22,6 +26,8 @@ function IconArrowElbow({ className, ...props }: React.ComponentProps<"svg">) {
 
 export default function Page() {
   const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useUIState<typeof AI>();
+  const { submitUserMessage } = useActions<typeof AI>();
   const { formRef, onKeyDown } = useEnterSubmit();
 
   return (
@@ -29,21 +35,32 @@ export default function Page() {
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         <div className={cn("pb-[200px] pt-4 md:pt-10")}>
           <div className="relative mx-auto max-w-2xl px-4">
-            <div className="mx-auto max-w-2xl px-4">
-              <div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
-                <h1 className="text-lg font-semibold">
-                  Welcome to the food AI Chatbot!
-                </h1>
-                <p className="leading-normal text-muted-foreground">
-                  Introducing an innovative AI chatbot app template, seamlessly
-                  combining text and generative UI for personalized nutrition
-                  guidance. Synced interface state ensures real-time adaptation
-                  to user interactions, revolutionizing the way you explore
-                  ingredients, diets, and recipes. Experience the future of food
-                  interaction with this open-source solution.
-                </p>
+            {messages.length > 0 ? (
+              <>
+                {messages.map((message, index) => (
+                  <div key={message.id}>
+                    {message.display}
+                    <Separator className="my-4" />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div className="mx-auto max-w-2xl px-4">
+                <div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
+                  <h1 className="text-lg font-semibold">
+                    Welcome to the food AI Chatbot!
+                  </h1>
+                  <p className="leading-normal text-muted-foreground">
+                    Introducing an innovative AI chatbot app template,
+                    seamlessly combining text and generative UI for personalized
+                    nutrition guidance. Synced interface state ensures real-time
+                    adaptation to user interactions, revolutionizing the way you
+                    explore ingredients, diets, and recipes. Experience the
+                    future of food interaction with this open-source solution.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="h-px w-full" />
         </div>
@@ -55,6 +72,20 @@ export default function Page() {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   setInputValue("");
+
+                  setMessages((currentMessages) => [
+                    ...currentMessages,
+                    {
+                      id: nanoid(),
+                      display: <div>{inputValue}</div>,
+                    },
+                  ]);
+
+                  const responseMessage = await submitUserMessage(inputValue);
+                  setMessages((currentMessages) => [
+                    ...currentMessages,
+                    responseMessage as any,
+                  ]);
                 }}
               >
                 <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">

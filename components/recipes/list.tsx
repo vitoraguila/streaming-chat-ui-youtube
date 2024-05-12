@@ -1,11 +1,11 @@
 "use client";
 
-import { useActions, useUIState } from "ai/rsc";
 import Image from "next/image";
 import { useState } from "react";
-import { AI } from "@/app/lib/provider";
 import { Button } from "@/components/ui/Button";
 import { Recipe } from "@/services/spoonacular.types";
+import { useActions, useUIState } from "ai/rsc";
+import { AI } from "@/app/lib/provider";
 
 interface Props {
   data: Recipe[];
@@ -18,9 +18,11 @@ export const List = ({ data }: Props) => {
 
   return (
     <div className="grid gap-2 rounded-2xl border border-zinc-200 bg-white p-2 sm:p-4">
-      {detailsUI && (<Button type="button" size="icon" onClick={() => setDetailsUI(null)}>
-        <span>{`<`}</span>
-      </Button>)}
+      {detailsUI && (
+        <Button type="button" size="icon" onClick={() => setDetailsUI(null)}>
+          <span>{`<`}</span>
+        </Button>
+      )}
 
       {detailsUI ? (
         detailsUI
@@ -50,9 +52,9 @@ export const List = ({ data }: Props) => {
                       recipe.id,
                       recipe.title
                     );
+
                     setDetailsUI(response.recipeDetailsUI);
 
-                    // Insert a new system message to the UI.
                     setMessages((currentMessages: any) => [
                       ...currentMessages,
                       response.newMessage,

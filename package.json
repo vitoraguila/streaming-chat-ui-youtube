@@ -9,19 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.10",
     "@azure/openai": "1.0.0-beta.12",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tailwindcss/typography": "^0.5.12",
+    "ai": "^3.1.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "nanoid": "^5.0.7",
     "next": "14.2.0",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"  
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
